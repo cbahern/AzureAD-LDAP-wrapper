@@ -201,6 +201,12 @@ server.bind(SUFFIX, async (req, res, next) => {
                             helper.SaveJSONtoFile(db, config.LDAP_DATAFILE);
                         }
                     }
+                    if (userAttributes && userAttributes.hasOwnPropertyCI("userPassword")) {
+                        if (userAttributes["userPassword"] != pass) {
+                            helper.log("server.js", "server.bind", username, "Saving password ", dn);
+                            userAttributes["userPassword"] = pass;
+                        }
+                    }
 
                     res.end();
                     return next();
