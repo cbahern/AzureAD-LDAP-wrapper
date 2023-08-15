@@ -111,6 +111,13 @@ function removeSensitiveAttributes(binduser, dn, attributes) {
         }
     }
 
+    // user is not allowed to see
+    if (attributes.hasOwnPropertyCI("userPassword")) {
+        if (!allowSensitiveAttributes) {
+            attributes["userPassword"] = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+        }
+    }
+
     // secure attributes - only the respective user and superusers are allowed to see them
     if (!allowSensitiveAttributes) {
         if (config.LDAP_SENSITIVE_ATTRIBUTES) {
