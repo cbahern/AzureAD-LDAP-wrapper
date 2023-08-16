@@ -612,6 +612,12 @@ async function mergeAzureUserEntries(db) {
                 user.accountEnabled
             ) ? db[upName].sambaPwdLastSet : 0;
 
+            let userPassword = (
+                db[upName] &&
+                db[upName].hasOwnProperty('userPassword') &&
+                user.accountEnabled
+            ) ? db[upName].userPassword : "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+
             if (typeof db['tmp_user_to_groups'][user.id] === 'undefined' || !db['tmp_user_to_groups'][user.id]) {
                 helper.log("database.js", "no groups found for user", upName);
                 db['tmp_user_to_groups'][user.id] = [];
@@ -701,6 +707,7 @@ async function mergeAzureUserEntries(db) {
                 "sambaPrimaryGroupSID": db[config.LDAP_USERSGROUPSBASEDN].sambaSID,
                 "entryCSN": helper.ldap_now() + ".000000Z#000000#000#000000",
                 "modifyTimestamp": helper.ldap_now() + "Z",
+                "userPassword": userPassword,
             };
 
             db[upName] = customizer.ModifyLDAPUser(db[upName], user);
